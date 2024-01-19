@@ -20,8 +20,12 @@ GitHub : Plateforme de gestion de code source pour faciliter la collaboration et
 
 Installation :
 Clonez le dépôt : gh repo clone Livai20/Let-s-Chat-Together-Social-Media 
-Installez les dépendances : npm install
-Lancez l'application : npm start/node app
+Install Node.js and npm:
+  Download and install Node.js from the official website: Node.js Downloads
+  During the installation, npm will be installed automatically
+Assurez d'etre dans le dossier contenant app.js(Let-s-Chat-Together-Social-Media-main\Let-s-Chat-Together-Social-Media-main>)
+Installez les dépendances : npm install node express socket.io fs
+Lancez l'application : node app
 
 Contribution :
 Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou à proposer des pull requests.

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Reseau social</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #taches-liste li.message-envoye {
+      background-color: #4caf50; 
+      align-self: flex-end; 
+      width:auto;
+      max-width:80%;
+    }
+    h1 {
+      color: #333;
+    }
+    
+    #taches-liste {
+      list-style: none;
+      padding: 0;
+      width: 100%;
+      margin: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding-bottom:3vh; 
+    }
+    
+    #taches-liste li {
+      margin: 4px 0;
+      padding: 8px;
+      background-color: #dadada;
+      border-radius: 6px;
+      word-wrap: break-word;
+      min-width:100px;
+      width:auto !important;
+      max-width:80%;
+    }
+    
+    #ajouter-tache-form {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      width: 85%;
+      margin:8px;
+      background-color: #fff;
+      padding: 5px;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    #nouvelle-tache {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #ajouter-tache-form button {
+      padding: 8px;
+      background-color: #0054a1;
+      color: white;
+      border: none;
+      radius:0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  
+  </style>
+</head>
+<body>
+  <h1>Let's Chat Together</h1>
+
+  <ul id="taches-liste"></ul>
+
+  <form id="ajouter-tache-form">
+    <input type="text" id="nouvelle-tache" placeholder="Nouvelle tâche" required>
+    <button type="submit">Ajouter</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script>
+    const socket = io();
+    const tachesListe = document.getElementById('taches-liste');
+    const ajouterTacheForm = document.getElementById('ajouter-tache-form');
+    const nouvelleTacheInput = document.getElementById('nouvelle-tache');
+  
+    // Utiliser l'identifiant utilisateur du côté client
+    const monIdentifiantUtilisateur = Date.now().toString(36) + Math.random().toString(36).substr(2);
+  
+    ajouterTacheForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const nouvelleTache = nouvelleTacheInput.value.trim();
+      if (nouvelleTache !== '') {
+        // Émettre l'événement avec l'identifiant utilisateur
+        socket.emit('nouvelle tâche', { tache: nouvelleTache, utilisateurId: monIdentifiantUtilisateur });
+        nouvelleTacheInput.value = '';
+      }
+    });
+  
+    // Écouter l'événement initial et mettre à jour la liste des tâches
+    socket.on('initial tasks', (data) => {
+      const { tasks, utilisateurId } = data;
+      tachesListe.innerHTML = '';
+      tasks.forEach((tache) => {
+        appendTaskToList(tache, utilisateurId);
+      });
+    });
+  
+    socket.on('nouvelle tâche', (data) => {
+      const { tache, utilisateurId, estMessageEnvoye } = data;
+      appendTaskToList({ tache, utilisateurId }, monIdentifiantUtilisateur, estMessageEnvoye);
+    });
+  
+    function appendTaskToList(task, currentUserId, isMessageSent = false) {
+      const nouvelleTacheElement = document.createElement('li');
+      nouvelleTacheElement.textContent = task.tache.tache;
+  
+      if (task.tache.utilisateurId === currentUserId && isMessageSent) {
+        // Ajoutez la classe message-envoye pour les messages envoyés
+        nouvelleTacheElement.classList.add('message-envoye');
+      }
+  
+      tachesListe.appendChild(nouvelleTacheElement);
+    }
+  </script>
+
+</body>
+</html>

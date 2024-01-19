@@ -19,7 +19,7 @@ HTML, CSS, JavaScript : Langages de base pour la création de l'interface utilis
 GitHub : Plateforme de gestion de code source pour faciliter la collaboration et le suivi des versions.
 
 Installation :
-Clonez le dépôt : git clone 
+Clonez le dépôt : gh repo clone Livai20/Let-s-Chat-Together-Social-Media 
 Installez les dépendances : npm install
 Lancez l'application : npm start/node app
 
